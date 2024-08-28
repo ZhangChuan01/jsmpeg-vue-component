@@ -57,13 +57,11 @@ const initVideo = (camera: Camera) => {
               id: uuidv4(),
               port: data.ports[i]
             })
-            if(data.ports.length - 1 === i){
-              resolve('complete')
-            }
           }
-        }else {
-          resolve('complete')
         }
+      }).finally(() => {
+        // console.log('finally')
+        resolve('complete')
       })
   })
 }

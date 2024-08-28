@@ -10,7 +10,7 @@ const info = {
       password: 'password'
     },
     {
-      ip: '192.168.8.234',
+      ip: '192.168.8.233',
       username: 'username',
       password: 'password'
     }
