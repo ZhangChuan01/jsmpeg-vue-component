@@ -1,12 +1,16 @@
 {
   "name": "jsmpeg-vue-component",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "description": "jsmpeg-vue-component",
   "files": ["dist","demo.png"],
   "keywords": [
     "jsmpeg-vue-component"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZhangChuan01/jsmpeg-vue-component.git"
+  },
   "license": "MIT",
   "scripts": {
     "dev": "vite",
