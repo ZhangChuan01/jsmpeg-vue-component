@@ -1,6 +1,8 @@
+jsmpeg-vue-component
+================
 ### vue3组件(TS版本，vue版本3.2.37)
 ### 使用jsmpeg预览实时预览（MPEG1 / MP2）视频流
-### 此组件要搭配本人开发的node服务来使用，前端是无法直接预览rtsp流的，所以要有服务端利用ffmpeg来将rtsp转换为mpeg或者flv等来供前端使用，摄像头只能是海康，尚未对接其他摄像头
+### 此组件要搭配[jsmpeg-node-server](https://github.com/ZhangChuan01/jsmpeg-node-server)来使用，前端是无法直接预览rtsp流的，所以要有服务端利用ffmpeg来将rtsp转换为mpeg或者flv等来供前端使用，摄像头只能是海康，尚未对接其他摄像头
 #### 如何使用
 1. 安装
     ```  
