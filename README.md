@@ -6,7 +6,7 @@ jsmpeg-vue-component
 #### 如何使用
 1. 安装
     ```  
-    yard add jsmpeg-vue-component --save
+    yarn add jsmpeg-vue-component --save
     npm install jsmpeg-vue-component --save
     ```
 2. 引入  
