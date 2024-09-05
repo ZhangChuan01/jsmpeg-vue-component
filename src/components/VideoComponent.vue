@@ -50,7 +50,7 @@ const initVideo = (camera: Camera) => {
       })
     }).then(response => response.json())
       .then(async data => {
-        console.log(data)
+        // console.log(data)
         if(data.ports.length){
           for(let i = 0; i < data.ports.length; i++){
             videos.value.push({
@@ -83,6 +83,7 @@ const reset = () => {
 }
 const initPage = async () => {
   reset()
+  console.log('initPage',props.info,videos.value)
   for(let i = 0; i < props.info.cameraList.length; i++){
     await initVideo(props.info.cameraList[i])
   }
@@ -90,6 +91,15 @@ const initPage = async () => {
   renderVideo()
   connectWs()
 }
+watch(() => props.info, () => {
+  // initPage()
+  if(ws){
+    ws.close()
+  }else{
+    initPage()
+  }
+  // console.log('watch',props.info)
+},{ deep: true })
 let currentFullScreenPlayer:any = null
 const fullScreen = (port: number) => {
   const videoFullScreen = document.getElementById('videoFullScreen') as HTMLElement
