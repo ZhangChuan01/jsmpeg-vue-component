@@ -130,7 +130,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div :style="{display: 'flex',flexWrap: 'wrap',justifyContent: 'space-between'}">
+  <div :style="{display: 'flex',flexWrap: 'wrap',justifyContent: 'space-between',width: '100%',height: '100%'}">
     <div
       v-for="video in videos"
       :key="video.id"
