@@ -11,6 +11,14 @@ interface Info {
   videoWidth?: number | string
   videoHeight?: number | string
 }
+interface LoadCamera {
+  id: string
+  port: number
+  ip: string
+  channel: number
+  username: string
+  password: string
+}
 </script>
 <script setup lang="ts">
 import { v4 as uuidv4 } from 'uuid'
@@ -20,16 +28,18 @@ const props = withDefaults(defineProps<{
   info: Info
 }>(), {
 })
-let videos = ref<{id: string,port: number}[]>([]),players = ref<any>([])
+let videos = ref<LoadCamera[]>([]),players = ref<any>([])
 let ws:any = null
 const connectWs = () => {
   ws = new WebSocket(`ws://${props.info.serverIp}:5500`)
-  // ws.onopen = () => {
-  //   console.log('ws open')
-  // }
+  ws.onopen = () => {
+    console.log('ws open')
+    initPage()
+  }
   ws.onclose = () => {
     // console.log('ws close')
-    initPage()
+    reset()
+    connectWs()
   }
   ws.onmessage = event => {
     console.log('ws message',event.data)
@@ -55,7 +65,11 @@ const initVideo = (camera: Camera) => {
           for(let i = 0; i < data.ports.length; i++){
             videos.value.push({
               id: uuidv4(),
-              port: data.ports[i]
+              port: data.ports[i],
+              ip: camera.ip,
+              channel: camera.channels && camera.channels[i] || 102,
+              username: camera.username,
+              password: camera.password
             })
           }
         }
@@ -66,6 +80,7 @@ const initVideo = (camera: Camera) => {
   })
 }
 const renderVideo = () => {
+  console.log('renderVideo',videos.value)
   videos.value.forEach((video,index) => {
     // console.log(document.getElementById(video.id))
     const player = new JSMpeg.VideoElement(document.getElementById(video.id), `ws://${props.info.serverIp}:${video.port}/`,{
@@ -73,6 +88,42 @@ const renderVideo = () => {
     })
     players.value.push(player)
   })
+  console.log('players',players.value)
+}
+const refreshSignalVideo = (camera: LoadCamera,index:number) => {
+  fetch(`http://${props.info.serverIp}:5550/showVideo`,{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    body: JSON.stringify({
+      ip: camera.ip,
+      username: camera.username,
+      password: camera.password,
+      channels: [ camera.channel ]
+    })
+  }).then(response => response.json())
+    .then(async data => {
+      // console.log(data)
+      if(data.ports.length){
+        const newVideo = {
+          id: uuidv4(),
+          port: data.ports[0],
+          ip: camera.ip,
+          channel: camera.channel,
+          username: camera.username,
+          password: camera.password
+        }
+        videos.value.splice(index,1,newVideo)
+        console.log('videos',videos.value)
+        await nextTick()
+        const player = new JSMpeg.VideoElement(document.getElementById(newVideo.id), `ws://${props.info.serverIp}:${newVideo.port}/`,{
+          disableGl: true
+        })
+        players.value.splice(index,1,player)
+        console.log('videos22222',players)
+      }
+    })
 }
 const reset = () => {
   players.value.forEach(player => player.destroy())
@@ -82,21 +133,20 @@ const reset = () => {
   ws = null
 }
 const initPage = async () => {
-  reset()
+  // reset()
   console.log('initPage',props.info,videos.value)
   for(let i = 0; i < props.info.cameraList.length; i++){
     await initVideo(props.info.cameraList[i])
   }
   // console.log('rrrr',videos.value)
   renderVideo()
-  connectWs()
+  // connectWs()
 }
 watch(() => props.info, () => {
-  // initPage()
   if(ws){
-    ws.close()
+    reset()
   }else{
-    initPage()
+    connectWs()
   }
   // console.log('watch',props.info)
 },{ deep: true })
@@ -122,7 +172,7 @@ const closeFullScreen = () => {
 onMounted(() => {
   // console.log(props.info)
   if(!props.info || !props.info.serverIp || !props.info.cameraList) return
-  initPage()
+  connectWs()
 })
 onBeforeUnmount(() => {
   reset()
@@ -130,18 +180,30 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div :style="{display: 'flex',flexWrap: 'wrap',justifyContent: 'space-between',width: '100%',height: '100%'}">
+  <div
+    :style="{position: 'relative',display: 'flex',flexWrap: 'wrap',justifyContent: 'space-between',width: '100%',height: '100%',
+             backgroundColor: videos.length ? 'white' : '#f5f5f5'}"
+  >
     <div
-      v-for="video in videos"
+      v-for="(video,index) in videos"
       :key="video.id"
       class="mpeg-video"
-      :style="{width: props.info.videoWidth || '100%',height: props.info.videoHeight || '500px',boxSizing: 'border-box',padding:'2px',display: 'flex',justifyContent: 'center',alignItems: 'center'}"
+      title="刷新视频"
+      :style="{width: props.info.videoWidth || '100%',height: props.info.videoHeight || '500px',boxSizing: 'border-box',padding:'2px',display: 'flex',justifyContent: 'center',
+               alignItems: 'center',cursor: 'pointer'}"
+      @click="refreshSignalVideo(video,index)"
       @dblclick="fullScreen(video.port)"
     >
       <div
         :id="video.id"
         :style="{width: 'calc(100% - 4px)',height: 'calc(100% - 4px)'}"
       />
+    </div>
+    <div
+      v-if="!videos.length"
+      :style="{position: 'absolute',top: '50%',left: '50%',transform: 'translate(-50%,-50%)'}"
+    >
+      视频加载中...
     </div>
   </div>
   <div
