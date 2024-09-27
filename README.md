@@ -18,7 +18,7 @@ jsmpeg-vue-component
       --- 摄像头对象中ip，username，password必传  
       ![alt text](https://raw.githubusercontent.com/ZhangChuan01/jsmpeg-vue-component/main/demo.png)
 4. 其他  
-    视频画面单击可刷新（主要用于黑屏或拉流失败之后，重新拉流）
+    视频画面单击可刷新（主要用于黑屏或拉流失败之后，重新拉流）    
     视频画面双击可以全屏预览  
     总体字段如下  
     ##### info
