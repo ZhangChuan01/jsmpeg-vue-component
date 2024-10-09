@@ -47,7 +47,7 @@ const connectWs = () => {
 }
 const initVideo = (camera: Camera) => {
   return new Promise(resolve => {
-    fetch(`http://${props.info.serverIp}:5550/showVideo`,{
+    fetch(`http://${props.info.serverIp}:5550/showVideo/init`,{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=utf-8'
@@ -91,7 +91,7 @@ const renderVideo = () => {
   console.log('players',players.value)
 }
 const refreshSignalVideo = (camera: LoadCamera,index:number) => {
-  fetch(`http://${props.info.serverIp}:5550/showVideo`,{
+  fetch(`http://${props.info.serverIp}:5550/showVideo/init`,{
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
@@ -167,8 +167,24 @@ const closeFullScreen = () => {
   close.style.display = 'none'
   currentFullScreenPlayer?.destroy()
   currentFullScreenPlayer = null
-  
 }
+let clickTime = 0
+document.addEventListener('keydown', e => {
+  console.log('e.key',e.key,clickTime)
+  if(e.key === 'Enter'){
+    if(clickTime === 0){
+      clickTime = new Date().getTime()
+      setTimeout(() => {
+        clickTime = 0
+      }, 1000)
+    }else if(clickTime + 1000 > new Date().getTime()){
+      console.log('restart')
+      clickTime = 0
+      fetch(`http://${props.info.serverIp}:5550/showVideo/restart`)
+    }
+  }
+  console.log('e',e)
+})
 onMounted(() => {
   // console.log(props.info)
   if(!props.info || !props.info.serverIp || !props.info.cameraList) return

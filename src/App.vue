@@ -6,9 +6,14 @@ const info = reactive({
   serverIp: 'localhost',
   cameraList: [
     {
-      ip: '192.168.8.245',
+      ip: '192.168.8.231',
       username: 'admin',
-      password: 'admin'
+      password: 'ZKHY2024'
+    },
+    {
+      ip: '192.168.8.246',
+      username: 'admin',
+      password: 'ZKHY2024'
     }
   ]
 })
@@ -18,7 +23,7 @@ const toggleCamera1 = () => {
     {
       ip: '192.168.8.245',
       username: 'admin',
-      password: 'admin'
+      password: 'ZKHY2024'
     }
   ]
 }
@@ -28,7 +33,7 @@ const toggleCamera2 = () => {
     {
       ip: '192.168.8.231',
       username: 'admin',
-      password: 'admin'
+      password: 'ZKHY2024'
     }
   ]
 }
