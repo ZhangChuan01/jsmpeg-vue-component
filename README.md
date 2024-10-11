@@ -19,7 +19,8 @@ jsmpeg-vue-component
       ![alt text](https://raw.githubusercontent.com/ZhangChuan01/jsmpeg-vue-component/main/demo.png)
 4. 其他  
     视频画面单击可刷新（主要用于黑屏或拉流失败之后，重新拉流）    
-    视频画面双击可以全屏预览  
+    视频画面双击可以全屏预览    
+    双击回车重启node服务      
     总体字段如下  
     ##### info
     |  字段名  | 是否必传 | 类型 | 描述  |
