@@ -198,6 +198,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div
+    class="video-container"
     :style="{position: 'relative',display: 'flex',flexWrap: 'wrap',justifyContent: 'space-between',width: '100%',height: '100%',
              backgroundColor: videos.length ? 'white' : '#f5f5f5'}"
   >
