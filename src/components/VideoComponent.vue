@@ -6,6 +6,7 @@ interface Camera {
   channels?: number[]
 }
 interface Info {
+  isWss?: boolean
   serverIp: string
   cameraList: Camera[]
   videoWidth?: number | string
@@ -31,7 +32,7 @@ const props = withDefaults(defineProps<{
 let videos = ref<LoadCamera[]>([]),players = ref<any>([])
 let ws:any = null
 const connectWs = () => {
-  ws = new WebSocket(`ws://${props.info.serverIp}:5500`)
+  ws = new WebSocket(`${props.info.isWss ? 'wss' : 'ws'}://${props.info.serverIp}:5500`)
   ws.onopen = () => {
     console.log('ws open')
     initPage()
@@ -47,7 +48,7 @@ const connectWs = () => {
 }
 const initVideo = (camera: Camera) => {
   return new Promise(resolve => {
-    fetch(`http://${props.info.serverIp}:5550/showVideo/init`,{
+    fetch(`${props.info.isWss ? 'https' : 'http'}://${props.info.serverIp}:5550/showVideo/init`,{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=utf-8'
@@ -83,7 +84,7 @@ const renderVideo = () => {
   console.log('renderVideo',videos.value)
   videos.value.forEach((video,index) => {
     // console.log(document.getElementById(video.id))
-    const player = new JSMpeg.VideoElement(document.getElementById(video.id), `ws://${props.info.serverIp}:${video.port}/`,{
+    const player = new JSMpeg.VideoElement(document.getElementById(video.id), `${props.info.isWss ? 'wss' : 'ws'}://${props.info.serverIp}:${video.port}/`,{
       disableGl: true
     })
     players.value.push(player)
@@ -91,7 +92,7 @@ const renderVideo = () => {
   console.log('players',players.value)
 }
 const refreshSignalVideo = (camera: LoadCamera,index:number) => {
-  fetch(`http://${props.info.serverIp}:5550/showVideo/init`,{
+  fetch(`${props.info.isWss ? 'https' : 'http'}://${props.info.serverIp}:5550/showVideo/init`,{
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
@@ -180,7 +181,7 @@ document.addEventListener('keydown', e => {
     }else if(clickTime + 1000 > new Date().getTime()){
       console.log('restart')
       clickTime = 0
-      fetch(`http://${props.info.serverIp}:5550/showVideo/restart`)
+      fetch(`${props.info.isWss ? 'https' : 'http'}://${props.info.serverIp}:5550/showVideo/restart`)
     }
   }
   console.log('e',e)
