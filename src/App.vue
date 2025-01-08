@@ -3,12 +3,12 @@ import { reactive } from 'vue'
 import VideoComponent from './components/VideoComponent.vue'
 
 const info = reactive({
-  serverIp: 'localhost',
+  // serverIp: 'localhost',
   cameraList: [
     {
-      ip: '192.168.1.222',
+      ip: window.location.hostname,
       username: 'admin',
-      password: 'admin'
+      password: 'ZKHY2024'
     }
     // {
     //   ip: '192.168.8.246',

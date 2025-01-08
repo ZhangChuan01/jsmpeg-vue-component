@@ -1,6 +1,6 @@
 {
   "name": "jsmpeg-vue-component",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "type": "module",
   "description": "jsmpeg-vue-component",
   "files": ["dist","demo.png"],

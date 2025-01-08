@@ -7,7 +7,7 @@ interface Camera {
 }
 interface Info {
   isWss?: boolean
-  serverIp: string
+  serverIp?: string
   cameraList: Camera[]
   videoWidth?: number | string
   videoHeight?: number | string
@@ -30,9 +30,12 @@ const props = withDefaults(defineProps<{
 }>(), {
 })
 let videos = ref<LoadCamera[]>([]),players = ref<any>([])
-let ws:any = null
+const baseTypeWs = props.info.isWss ? 'wss' : 'ws',baseTypeHttp = props.info.isWss ? 'https' : 'http',baseIp = props.info.serverIp ? props.info.serverIp : window.location.host
+let ws:any = null 
 const connectWs = () => {
-  ws = new WebSocket(`${props.info.isWss ? 'wss' : 'ws'}://${props.info.serverIp}:5500`)
+  const connectUrl = props.info.serverIp ? `${baseTypeWs}://${props.info.serverIp}:5500` : `${baseTypeWs}://${baseIp}/connect`
+  ws = new WebSocket(connectUrl)
+  console.log('ws connection',ws)
   ws.onopen = () => {
     console.log('ws open')
     initPage()
@@ -48,7 +51,7 @@ const connectWs = () => {
 }
 const initVideo = (camera: Camera) => {
   return new Promise(resolve => {
-    fetch(`${props.info.isWss ? 'https' : 'http'}://${props.info.serverIp}:5550/showVideo/init`,{
+    fetch(!props.info.serverIp ? '/showVideo/init' : `${baseTypeHttp}://${props.info.serverIp}:5550/showVideo/init`,{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=utf-8'
@@ -84,7 +87,7 @@ const renderVideo = () => {
   console.log('renderVideo',videos.value)
   videos.value.forEach((video,index) => {
     // console.log(document.getElementById(video.id))
-    const player = new JSMpeg.VideoElement(document.getElementById(video.id), `${props.info.isWss ? 'wss' : 'ws'}://${props.info.serverIp}:${video.port}/`,{
+    const player = new JSMpeg.VideoElement(document.getElementById(video.id), !props.info.serverIp ? `${baseTypeWs}://${baseIp}/port${video.port}/` : `${baseTypeWs}://${props.info.serverIp}:${video.port}/`,{
       disableGl: true
     })
     players.value.push(player)
@@ -92,7 +95,7 @@ const renderVideo = () => {
   console.log('players',players.value)
 }
 const refreshSignalVideo = (camera: LoadCamera,index:number) => {
-  fetch(`${props.info.isWss ? 'https' : 'http'}://${props.info.serverIp}:5550/showVideo/init`,{
+  fetch(!props.info.serverIp ? '/showVideo/init' : `${baseTypeHttp}://${props.info.serverIp}:5550/showVideo/init`,{
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
@@ -116,13 +119,13 @@ const refreshSignalVideo = (camera: LoadCamera,index:number) => {
           password: camera.password
         }
         videos.value.splice(index,1,newVideo)
-        console.log('videos',videos.value)
+        // console.log('videos',videos.value)
         await nextTick()
-        const player = new JSMpeg.VideoElement(document.getElementById(newVideo.id), `ws://${props.info.serverIp}:${newVideo.port}/`,{
+        const player = new JSMpeg.VideoElement(document.getElementById(newVideo.id), !props.info.serverIp ? `${baseTypeWs}://${baseIp}/port${newVideo.port}/` : `${baseTypeWs}://${props.info.serverIp}:${newVideo.port}/`,{
           disableGl: true
         })
         players.value.splice(index,1,player)
-        console.log('videos22222',players)
+        // console.log('videos22222',players)
       }
     })
 }
@@ -135,7 +138,7 @@ const reset = () => {
 }
 const initPage = async () => {
   // reset()
-  console.log('initPage',props.info,videos.value)
+  // console.log('initPage',props.info,videos.value)
   for(let i = 0; i < props.info.cameraList.length; i++){
     await initVideo(props.info.cameraList[i])
   }
@@ -154,14 +157,18 @@ watch(() => props.info, () => {
 let currentFullScreenPlayer:any = null
 const fullScreen = (port: number) => {
   const videoFullScreen = document.getElementById('videoFullScreen') as HTMLElement
-  const close = document.getElementById('closeFullScreen') as HTMLElement
   videoFullScreen.style.display = 'block'
-  close.style.display = 'block'
-  currentFullScreenPlayer = new JSMpeg.VideoElement(videoFullScreen, `ws://${props.info.serverIp}:${port}/`,{
+  currentFullScreenPlayer = new JSMpeg.VideoElement(videoFullScreen, !props.info.serverIp ? `${baseTypeWs}://${baseIp}/port${port}/` : `${baseTypeWs}://${props.info.serverIp}:${port}/`,{
     disableGl: true
   })
+  setTimeout(() => {
+    const close = document.getElementById('closeFullScreen') as HTMLElement
+    close.style.display = 'block'
+    // console.log('aaaaaaaaaaaa',close.style.display)
+  }, 500)
 }
 const closeFullScreen = () => {
+  console.log('close fullscreen')
   const videoFullScreen = document.getElementById('videoFullScreen') as HTMLElement
   const close = document.getElementById('closeFullScreen') as HTMLElement
   videoFullScreen.style.display = 'none'
@@ -181,14 +188,14 @@ document.addEventListener('keydown', e => {
     }else if(clickTime + 1000 > new Date().getTime()){
       console.log('restart')
       clickTime = 0
-      fetch(`${props.info.isWss ? 'https' : 'http'}://${props.info.serverIp}:5550/showVideo/restart`)
+      fetch(!props.info.serverIp ? '/showVideo/restart' : `${baseTypeHttp}://${props.info.serverIp}:5550/showVideo/restart`)
     }
   }
   console.log('e',e)
 })
 onMounted(() => {
   // console.log(props.info)
-  if(!props.info || !props.info.serverIp || !props.info.cameraList) return
+  if(!props.info || !props.info.cameraList) return
   connectWs()
 })
 onBeforeUnmount(() => {
@@ -227,6 +234,7 @@ onBeforeUnmount(() => {
   <div
     id="videoFullScreen"
     :style="{position: 'fixed',top: 0,left: 0,width: '100%',height: '100vh',display: 'none',zIndex: 999}"
+    @dblclick="closeFullScreen"
   />
   <div
     id="closeFullScreen"

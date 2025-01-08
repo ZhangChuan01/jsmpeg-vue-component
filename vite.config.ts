@@ -11,7 +11,19 @@ const name = 'vue3后台管理系统'
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
-    host: '0.0.0.0'
+    host: '0.0.0.0',
+    proxy: {
+      '/connect': {
+        target: 'ws://localhost:5500',
+        changeOrigin: true,
+        ws: true,
+        rewrite: path => path.replace(/^\/connect/, '')
+      },
+      '/showVideo': {
+        target: 'http://localhost:5550',
+        changeOrigin: true
+      }
+    }
   },
   plugins: [
     vue(),

@@ -25,7 +25,7 @@ jsmpeg-vue-component
     ##### info
     |  字段名  | 是否必传 | 类型 | 描述  |
     |  ----  |  ------  |  ----  | ----  |
-    | serverIp  | 是 | string | 对应的服务端的IP，例：192.168.8.9 |
+    | serverIp  | 否 | string | 对应的服务端的IP，例：192.168.8.9，如果想通过nginx代理转发可参考下方nginx配置图片或者文件 |
     | cameraList | 是 | camera | 摄像头列表，具体字段在下面 |
     | videoWidth | 否 | string | 单个摄像头画面的宽度，默认 ‘100%’，可传入百分比或者具体像素值如‘100px’ |
     | videoHeight | 否 | string | 单个摄像头画面的高度，默认 ‘500px’ |
@@ -35,4 +35,8 @@ jsmpeg-vue-component
     | ip  | 是 | string | 摄像头IP |
     | username | 是 | camera | 摄像头用户名 |
     | password | 是 | string | 摄像头的密码 |
-    | channels | 否 | string[] | 摄像头画面的通道，数组，可传多个通道，一般101代表主码流，102代表子码流，默认[ 102 ] |
+    | channels | 否 | string[] | 摄像头画面的通道，数组，可传多个通道，一般101代表主码流，102代表子码流，默认[ '102' ] |
+    ##### nginx配置图片
+    ![alt text](https://raw.githubusercontent.com/ZhangChuan01/jsmpeg-vue-component/main/nginx.png)
+    ##### nginx配置文件
+    ![alt text](https://raw.githubusercontent.com/ZhangChuan01/jsmpeg-vue-component/main/nginx.conf)
