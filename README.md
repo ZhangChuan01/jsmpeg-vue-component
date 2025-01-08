@@ -39,4 +39,4 @@ jsmpeg-vue-component
     ##### nginx配置图片
     ![alt text](https://raw.githubusercontent.com/ZhangChuan01/jsmpeg-vue-component/main/nginx.png)
     ##### nginx配置文件
-    ![alt text](https://raw.githubusercontent.com/ZhangChuan01/jsmpeg-vue-component/main/nginx.conf)
+    [文件详情](https://raw.githubusercontent.com/ZhangChuan01/jsmpeg-vue-component/main/nginx.conf)
