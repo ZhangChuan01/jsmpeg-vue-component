@@ -35,7 +35,7 @@ jsmpeg-vue-component
     | ip  | 是 | string | 摄像头IP |
     | username | 是 | camera | 摄像头用户名 |
     | password | 是 | string | 摄像头的密码 |
-    | channels | 否 | string[] | 摄像头画面的通道，数组，可传多个通道，一般101代表主码流，102代表子码流，默认[ '102' ] |
+    | channels | 否 | string[] | 摄像头画面的通道，数组，可传多个通道，一般101代表主码流，102代表子码流，默认[ 102 ]，可传入number类型为通道，传入字符串为自定义路径，例如[ '/Streaming/Channels/h264' ] |
     ##### nginx配置图片
     ![alt text](https://raw.githubusercontent.com/ZhangChuan01/jsmpeg-vue-component/main/nginx.png)
     ##### nginx配置文件
