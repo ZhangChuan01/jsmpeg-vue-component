@@ -1,6 +1,6 @@
 {
   "name": "jsmpeg-vue-component",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "type": "module",
   "description": "jsmpeg-vue-component",
   "files": ["dist","demo.png"],
@@ -20,15 +20,15 @@
   },
   "dependencies": {
     "@cycjimmy/jsmpeg-player": "^6.1.1",
-    "reset-css": "^5.0.1",
     "sass": "^1.58.0",
     "sass-loader": "^13.2.0",
-    "stylelint-config-standard": "^29.0.0",
-    "stylelint-config-standard-scss": "^6.1.0",
-    "uuid": "^10.0.0",
-    "vue": "^3.2.37"
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
+    "reset-css": "^5.0.1",
+    "vue": "^3.2.37",
+    "stylelint-config-standard": "^29.0.0",
+    "stylelint-config-standard-scss": "^6.1.0",
     "@babel/core": "^7.20.12",
     "@babel/eslint-parser": "^7.19.1",
     "@types/node": "^20.4.5",
@@ -55,6 +55,9 @@
     "vite-plugin-svg-icons": "^2.0.1",
     "vite-plugin-vue-setup-extend": "^0.4.0",
     "vue-tsc": "^0.39.5"
+  },
+  "peerDependencies": {
+    "vue": "^3.2.37"
   },
   "main": "index.js",
   "author": "zc"
