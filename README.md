@@ -13,7 +13,7 @@ jsmpeg-vue-component
     import { VideoComponent } from 'jsmpeg-vue-component/dist'
 3. 模版中直接使用即可，但是有必传的参数  
     组件所需参数为一个对象名为info，其中  
-    serveIp 必传 服务端IP  
+    serveIp 非必传 服务端IP  
     cameraList 必传  摄像头列表  
       --- 摄像头对象中ip，username，password必传  
       ![alt text](https://raw.githubusercontent.com/ZhangChuan01/jsmpeg-vue-component/main/demo.png)
