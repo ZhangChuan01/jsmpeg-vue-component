@@ -12,7 +12,7 @@ jsmpeg-vue-component
 2. 引入     
     单独引入    
     import { VideoComponent } from 'jsmpeg-vue-component'   
-    全局注册
+    全局注册    
     import VideoComponent from 'jsmpeg-vue-component'    
     app.use(VideoComponent)
         .mount('#app')
