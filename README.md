@@ -9,8 +9,13 @@ jsmpeg-vue-component
     yarn add jsmpeg-vue-component --save
     npm install jsmpeg-vue-component --save
     ```
-2. 引入  
-    import { VideoComponent } from 'jsmpeg-vue-component/dist'
+2. 引入     
+    单独引入    
+    import { VideoComponent } from 'jsmpeg-vue-component'   
+    全局注册
+    import VideoComponent from 'jsmpeg-vue-component'    
+    app.use(VideoComponent)
+        .mount('#app')
 3. 模版中直接使用即可，但是有必传的参数  
     组件所需参数为一个对象名为info，其中  
     serveIp 非必传 服务端IP  

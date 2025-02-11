@@ -60,6 +60,7 @@ export default defineConfig({
       // 确保外部依赖项不应捆绑到你的库中
       external: [ 'vue' ],
       output: {
+        exports: 'named',
         // 提供全局变量以便在 UMD 构建中可以被外部依赖项使用
         globals: {
           vue: 'Vue'
