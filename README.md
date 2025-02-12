@@ -45,3 +45,5 @@ jsmpeg-vue-component
     ![alt text](https://raw.githubusercontent.com/ZhangChuan01/jsmpeg-vue-component/main/nginx.png)
     ##### nginx配置文件
     [文件详情](https://github.com/ZhangChuan01/jsmpeg-vue-component/blob/main/nginx.conf)
+5. TypeScript支持
+    在```tsconfig.json```中的```types```字段中添加```"jsmpeg-vue-component/dist"```即可获得组件及字段提示     
