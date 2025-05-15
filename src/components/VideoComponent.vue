@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<{
   info: Info
 }>(), {
 })
-let videos = ref<LoadCamera[]>([]),players = ref<any>([])
+let videos = ref<LoadCamera[]>([]),players = ref<any>([]),destroy = false
 const baseTypeWs = props.info.isWss ? 'wss' : 'ws',baseTypeHttp = props.info.isWss ? 'https' : 'http',baseIp = props.info.serverIp ? props.info.serverIp : window.location.host
 let ws:any = null 
 const connectWs = () => {
@@ -41,9 +41,11 @@ const connectWs = () => {
     initPage()
   }
   ws.onclose = () => {
-    // console.log('ws close')
-    reset()
-    connectWs()
+    console.log('ws close',destroy)
+    if(!destroy){
+      reset()
+      connectWs()
+    }
   }
   ws.onmessage = event => {
     console.log('ws message',event.data)
@@ -67,6 +69,10 @@ const initVideo = (camera: Camera) => {
         // console.log(data)
         if(data.ports.length){
           for(let i = 0; i < data.ports.length; i++){
+            const index = videos.value.findIndex(video => video.port === data.ports[i])
+            if(index !== -1){
+              videos.value.splice(index,1)
+            }
             videos.value.push({
               id: uuidv4(),
               port: data.ports[i],
@@ -129,16 +135,22 @@ const refreshSignalVideo = (camera: LoadCamera,index:number) => {
       }
     })
 }
-const reset = () => {
-  players.value.forEach(player => player.destroy())
-  players.value = []
-  videos.value = []
-  if(ws)  ws.close()
-  ws = null
+const reset = (destroyws = true) => {
+  try {
+    players.value.forEach(player => player.destroy())
+    players.value = []
+    videos.value = []
+    if(destroyws) {
+      if(ws)  ws.close()
+      ws = null
+    }
+  } catch (error) {
+    console.log('reset error',error)
+  }
 }
 const initPage = async () => {
-  // reset()
-  // console.log('initPage',props.info,videos.value)
+  reset(false)
+  console.log('initPage',props.info,videos.value)
   for(let i = 0; i < props.info.cameraList.length; i++){
     await initVideo(props.info.cameraList[i])
   }
@@ -199,6 +211,7 @@ onMounted(() => {
   connectWs()
 })
 onBeforeUnmount(() => {
+  destroy = true
   reset()
 })
 </script>
